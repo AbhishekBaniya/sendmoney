@@ -24,10 +24,11 @@ class PortfolioController extends GetxController {
   var balance = 100000.0.obs;
   var isHidden = false.obs;
   var transactions = <Map<String, dynamic>>[].obs;
-  var transaction = <TransactionsModel>[].obs;
+  var totalBalance = 0.0.obs;
+
 
   @override
-  void onInit() {
+  void onInit() async {
     fetchPortfolio();
     super.onInit();
     Logger().info("PortfolioController OnInit() Called");
@@ -63,7 +64,7 @@ class PortfolioController extends GetxController {
     isHidden.value = !isHidden.value;
   }
 
-  void sendMoney(double amount, String userName, int index) async {
+  void sendMoney(double amount, String userName, String userNameFrom, int index) async {
     if (amount <= 0) {
       Get.snackbar('Error', 'Enter a valid amount');
       return;
@@ -75,11 +76,16 @@ class PortfolioController extends GetxController {
     }
 
     balance.value -= amount;
+    //await HiveManager().putData(HiveBoxName.temp.name, HiveBoxKey.myBalance.name, balance.value -= amount);
+
+    //personAmounts.value[index]+=amount;
 
     //print('added amount is ===============================> ${personAmounts.value[index]+=amount}');
-
     transactions.value.add({
-      'amount': amount,
+      'name':userName,
+      'currentBalance': personAmounts.value[index],
+      'receivedAmount': amount,
+      'updatedBalance': personAmounts.value[index]+amount,
       'date': DateTime.now().toString(),
     });
     await HiveManager().putData(HiveBoxName.temp.name, userName, transactions);

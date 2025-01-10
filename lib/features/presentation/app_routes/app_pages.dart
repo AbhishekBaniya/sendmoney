@@ -1,6 +1,7 @@
 
 
 import 'package:get/get.dart';
+import 'package:sendmoney/features/presentation/pages/authentication/app_auth.dart';
 
 import '../bindings/app_binding.dart';
 import '../pages/portfolio_screen.dart';
@@ -8,6 +9,16 @@ import 'app_routes.dart';
 
 class AppPages {
   static final List<GetPage> pages = [
+    GetPage(
+      title: AppRoutes.login,
+      name: AppRoutes.login,
+      page: () => AppAuthScreen(),
+      binding: AppBindings(),
+      preventDuplicates: true,
+      popGesture: true,
+      maintainState: true,
+    ),
+
     GetPage(
       title: AppRoutes.home,
       name: AppRoutes.home,

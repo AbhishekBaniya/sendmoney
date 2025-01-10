@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:get/get.dart';
 
 class AppNavigator {
@@ -11,9 +9,10 @@ class AppNavigator {
   AppNavigator._internal();
 
   /// Navigate to a specific page
-  void navigateTo(String route, {dynamic arguments}) {
-    Get.toNamed(route, arguments: arguments);
-  }
+  void navigateTo(dynamic route, {dynamic arguments}) => Get.to(()=> route, arguments: arguments);
+
+  /// Navigate to a specific page
+  void navigateToNamed(String route, {dynamic arguments}) => Get.toNamed(route, arguments: arguments);
 
   /// Navigate to a page and replace the current one
   void navigateToAndReplace(String route, {dynamic arguments}) {
@@ -35,8 +34,8 @@ class AppNavigator {
       // Handle if no previous screen exists
         Get.snackbar('Error', 'No screens to pop!');
         break;
-      default:
-        log(' invalid entry');
+      // default:
+      //   log(' invalid entry');
     }
   }
 

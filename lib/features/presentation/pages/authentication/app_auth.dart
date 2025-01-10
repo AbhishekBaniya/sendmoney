@@ -96,6 +96,7 @@ class SignUpScreen extends StatelessWidget {
     return ElevatedButton(
       onPressed: () {
         // Handle button press for sign up
+        Get.find<AppAuthController>().saveData(name: Get.find<AppAuthController>().nameController.value.text.trim(), mobile: Get.find<AppAuthController>().userMobileNumberController.value.text.trim(), email: Get.find<AppAuthController>().userEmailIdController.value.text.trim(), password: Get.find<AppAuthController>().userPasswordController.value.text.trim(), confirmPassword: Get.find<AppAuthController>().confirmPasswordController.value.text.trim());
       },
       style: ElevatedButton.styleFrom(
         minimumSize: const Size(double.infinity, 50),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'config/res/strings.dart';
-import 'config/res/theme.dart';
 import 'core/utils/bool_manager.dart';
 import 'core/utils/constants.dart';
 import 'features/data/data_source/local_data_source/hive_manager.dart';
@@ -11,12 +10,6 @@ import 'features/presentation/app_routes/app_pages.dart';
 import 'features/presentation/app_routes/app_routes.dart';
 import 'features/presentation/bindings/app_binding.dart';
 import 'features/presentation/pages/authentication/app_auth.dart';
-
-
-//import 'core/network/dio_client.dart';
-//import 'features/data/data_source/portfolio_remote_data_source.dart';
-//import 'features/data/repositories/portfolio_repository_impl.dart';
-//import 'features/domain/usecases/get_portfolio.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -56,7 +49,7 @@ class MyApp extends StatelessWidget {
       navigatorObservers: [NavigationTracer()],
       // Set the observer here
       title: Strings.appName,
-      initialRoute: AppRoutes.home,
+      initialRoute: AppRoutes.login,
       home:  AppAuthScreen(),
     );
   }
