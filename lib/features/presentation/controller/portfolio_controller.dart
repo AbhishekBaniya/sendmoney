@@ -1,10 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sendmoney/core/utils/enums/hive_box_key.dart';
 import 'package:sendmoney/features/data/data_source/local_data_source/hive_manager.dart';
 
 import '../../../core/utils/app_logger.dart';
+import '../../data/model/transactions_model.dart';
 import '../../domain/entities/portfolio_entity.dart';
 import '../../domain/usecases/get_portfolio.dart';
 
@@ -16,14 +16,15 @@ class PortfolioController extends GetxController {
   var isLoading = true.obs;
   var hasError = false.obs;
   var currentIndex = -1.obs;
-  var /*List<int> */colorCodes = <int>[50, 100, 200, 300, 400, 500, 600, 700, 800, 900].obs;
-  //var amounts = <int>[5000, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000].obs;
+  //var /*List<int> */colorCodes = <int>[50, 100, 200, 300, 400, 500, 600, 700, 800, 900].obs;
+  var personAmounts = <double>[5000, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000].obs;
   var amount = 0.0.obs;
   var amountController = TextEditingController().obs;
 
-  var balance = 500.0.obs;
+  var balance = 100000.0.obs;
   var isHidden = false.obs;
   var transactions = <Map<String, dynamic>>[].obs;
+  var transaction = <TransactionsModel>[].obs;
 
   @override
   void onInit() {
@@ -62,7 +63,7 @@ class PortfolioController extends GetxController {
     isHidden.value = !isHidden.value;
   }
 
-  void sendMoney(double amount) async {
+  void sendMoney(double amount, String userName, int index) async {
     if (amount <= 0) {
       Get.snackbar('Error', 'Enter a valid amount');
       return;
@@ -74,25 +75,15 @@ class PortfolioController extends GetxController {
     }
 
     balance.value -= amount;
-    await HiveManager().putMap(HiveBoxName.temp.name, {HiveBoxKey.amount.name : amount, HiveBoxKey.date.name : DateTime.now().toString()});
-    transactions.add({
+
+    //print('added amount is ===============================> ${personAmounts.value[index]+=amount}');
+
+    transactions.value.add({
       'amount': amount,
       'date': DateTime.now().toString(),
     });
-
-    Get.bottomSheet(
-      Container(
-        color: Colors.white,
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.check_circle, color: Colors.green, size: 50),
-            Text('Transaction Successful!'),
-          ],
-        ),
-      ),
-    );
+    await HiveManager().putData(HiveBoxName.temp.name, userName, transactions);
     Get.back();
+    Get.snackbar('Success', 'Transaction Successful!', icon: Icon(Icons.check_circle, color: Colors.green, size: 24));
   }
 }

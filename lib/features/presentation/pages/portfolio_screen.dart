@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:sendmoney/core/utils/enums/hive_box_key.dart';
 import 'package:sendmoney/features/data/data_source/local_data_source/hive_manager.dart';
 
@@ -19,7 +18,15 @@ class PortfolioScreen extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      //appBar: AppBar(title: const Text('Portfolio'), centerTitle: false, leading: const Icon(Icons.list),),
+      appBar: AppBar(title: const Text('Portfolio'), centerTitle: false, actions: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Obx(()=> AppRichTextWidget().buildComplexRichText(textSpans: [
+              TextSpan(text: 'Current Account Balance ${controller.balance.value}'),
+            ],),
+          ),
+        ),
+      ],),
       body: Obx(() {
         if (controller.isLoading.value) {
           return Center(child: RandomColorProgressIndicator(),);
@@ -31,7 +38,7 @@ class PortfolioScreen extends StatelessWidget {
             itemCount: controller.portfolioItems.length,
             itemBuilder: (context, index) {
               final item = controller.portfolioItems[index];
-              return Container(width: MediaQuery.of(context).size.width, child: InkWell(onTap: (){
+              return  SizedBox(width: MediaQuery.of(context).size.width, child: InkWell(onTap: (){
                 controller.currentIndex = index;
 
                 RoundedBottomSheet().show(
@@ -64,17 +71,18 @@ class PortfolioScreen extends StatelessWidget {
                               child: ElevatedButton(
                                 onPressed: () async {
                                  // Get.back(); // Close the bottom sheet
-                                  var amount = await HiveManager().getAllData(HiveBoxName.temp.name);
+                                  var amount = await HiveManager().getData(HiveBoxName.temp.name, item.name);
                                   //print('Abhishek Data ==============> ${amount.val(HiveBoxKey.date.name.tr).key}');
-                                  print('Abhishek Data ==============> ${amount[HiveBoxKey.amount.name]}');
+                                  if(amount != null ){
+                                    print('Abhishek Data ==============> ${amount}');
+                                    for(var data in amount){
+                                      print("Abhishek Data ==============> Amount : ${data['amount']} Date : ${data['date']}");
 
-                                  // Access a specific value using the key
-                                  /*if (amount.containsKey(key)) {
-                                    var value = map[key];
-                                    Logger().info("Value for key '$key': $value");
+                                    }
+
                                   } else {
-                                    Logger().info("Key '$key' not found in box '$boxName'.");
-                                  }*/
+                                    Get.snackbar('404', 'No Data Found!', icon: Icon(Icons.build_circle, color: Colors.red, size: 24));
+                                  }
                                 },
                                 child: Text('View Balance'),
                               ),
@@ -92,8 +100,9 @@ class PortfolioScreen extends StatelessWidget {
                 leading: index == controller.currentIndex ? Icon(Icons.star) : Icon(Icons.star_border),
                 title: AppRichTextWidget().buildComplexRichText(textSpans: [
                   TextSpan(text: 'Entry ${item.name}'),
-                ],), trailing: ElevatedButton(
-                onPressed: () {
+                ],),
+                trailing: ElevatedButton(
+                  onPressed: () {
                   //Get.back(); // Close the bottom sheet
                   RoundedBottomSheet().show(
                   content: Padding(
@@ -112,7 +121,7 @@ class PortfolioScreen extends StatelessWidget {
                         SizedBox(height: 20),
                         ElevatedButton(
                           onPressed: () {
-                            controller.sendMoney(double.parse(controller.amountController.value.text));
+                            controller.sendMoney(double.parse(controller.amountController.value.text), item.name, index);
                             },
                           child: Text('Submit'),
                         ),

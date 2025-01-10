@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sendmoney/core/utils/bool_manager.dart';
 import 'package:sendmoney/core/utils/enums/hive_box_key.dart';
 import 'package:sendmoney/features/data/data_source/local_data_source/hive_manager.dart';
-import 'package:sendmoney/features/presentation/pages/authentication/app_auth.dart';
 import 'package:sendmoney/features/presentation/pages/portfolio_screen.dart';
 
 import '../../../../core/utils/app_logger.dart';
+import '../../app_routes/app_navigators.dart';
+import '../../app_routes/app_routes.dart';
 import '../../widgets/widget_controller/checkbox_controller.dart';
 
 class AppAuthController extends GetxController {
@@ -59,7 +59,9 @@ class AppAuthController extends GetxController {
   void logout() async{
     await HiveManager().putData(HiveBoxName.temp.name, HiveBoxKey.keepMeSignIn.name, false);
     //userBox.put('isLoggedIn', false);
-    Get.offAll(() => AppAuthScreen(),);
+   // Get.offAllNamed(() => AppAuthScreen(),);
+    AppNavigator().navigateTo(AppRoutes.home,);
+
   }
 
   /*_setInitialScreen (User? user) {

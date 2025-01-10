@@ -136,6 +136,23 @@ class HiveManager {
     return map;
   }
 
+  // Method to store a list of transactions in the Hive box
+  Future<void> putMapList(String boxName, String boxKey, List<Map<String, dynamic>> transactions) async {
+    Logger().info("Storing List Map in box '$boxName'.");
+    final box = await openBox(boxName);
+    await box.put(boxKey, transactions); // Store the list under the key 'transactions'
+    Logger().info("List Of Map stored successfully in box '$boxName'.");
+  }
+
+  // Method to retrieve all transactions from the Hive box
+  Future<List<Map<String, dynamic>>> getMapList(String boxName, String boxKey) async {
+    Logger().info("Fetching List of map data from box '$boxName'.");
+    final box = await openBox(boxName);
+    final transactionsList = box.get(boxKey, defaultValue: <Map<String, dynamic>>[]); // Fetch the transactions list
+    Logger().info("List Of Map fetched successfully: $transactionsList");
+    return transactionsList;
+  }
+
   // Close a box
   Future<void> closeBox(String boxName) async {
     Logger().info("Closing box '$boxName'.");
